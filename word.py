@@ -1,6 +1,6 @@
 import string
 import nltk
-class ModifiedWPTokenizer( nltk.tokenize.RegexpTokenizer):
+class Tokenizer( nltk.tokenize.RegexpTokenizer):
     def __init__(self):
         nltk.tokenize.RegexpTokenizer.__init__(self, r'\w+|[^\w\s]|\s+')
 class SentenceTokenizer():
@@ -12,7 +12,7 @@ class SentenceTokenizer():
         return {'next-capitalized': (i<len(tokens)-1) and tokens[i+1][0][0].isupper(),'prevword': tokens[i-1][0].lower(),'punct': tokens[i][0],'prev-one': len(tokens[i-1][0]) == 1}
         # naive bayes is used for training
     def __init__(self):
-        self.tokenizer = ModifiedWPTokenizer()
+        self.tokenizer =Tokenizer()
         training_sents = nltk.corpus.treebank_raw.sents()
         tokens = []
         boundaries = set()
