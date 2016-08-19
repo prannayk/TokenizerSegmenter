@@ -3,7 +3,8 @@ from nltk import pos_tag,word_tokenize
 from nltk.corpus import treebank
 from nltk.corpus import brown
 print("Using the treebank lexicon")
-
+import os
+root = '~'
 words = treebank.words()
 words += brown.words()
 tagged_words = treebank.tagged_words()
@@ -20,8 +21,6 @@ for word in words:
 		tokenizer.add_multichar_symbol(word)
 print("Preprocessing completed")
 
-test = "shan't can't wouldn't This some randomized test data which is not so random. I'm okay with it! Aren't you? The question is, what does the fox say, or rather the foxes say? Corp. Mr. Dr. www.prannayk.com google.com players cricketers balls"
-
 def ignore(tokens):
 	i = 0
 	for symbols in kip_symbols:
@@ -32,28 +31,43 @@ def ignore(tokens):
 	return False
 
 #rint(tokenize(test))
-def analyze(token):
-	return pos_tag(token)
+def process_file_text(test):
+	def analyze(token):
+		return pos_tag(token)
 
-def tokenize(text):
-	text = text.split(" ")
-	tokens = []
-	for word in text:
-		temptokens = tokenizer.tokenize_one_level(word)
-		if len(temptokens) > 1:
-			if not ignore(word):
-				tokens += (word,)
+	def tokenize(text):
+		text = text.split(" ")
+		tokens = []
+		for word in text:
+			temptokens = tokenizer.tokenize_one_level(word)
+			if len(temptokens) > 1:
+				if not ignore(word):
+					tokens += (word,)
+				else:
+					tokens += temptokens
 			else:
 				tokens += temptokens
-		else:
-			tokens += temptokens
-	return tokens
+		return tokens
 
-tokenized = tokenize(test)
+	tokenized = tokenize(test)
 
-analysed = {}
-for tokens in tokenized:
-	analysed.update(analyze((tokens,)))
+	analysed = {}
+	for tokens in tokenized:
+		analysed.update(analyze((tokens,)))
+	return analysed
+#	for token in tokenized:
+#		print(token + ":" + analysed[token])
 
-for token in tokenized:
-	print(token + ":" + analysed[token])
+print("here")
+root = '../resources'
+for root,subFolders, files in os.walk(root):
+	print("here")
+	for folder in subFolders:
+		for root,subs,files in os.walk(os.path.join(root,folder)):
+			for file1 in files:
+				f = open(os.path.join(root,folder,file1),"r")
+				print(f.name())
+				content = f.read()
+				data = process_file_text(content)
+				print(data)
+				print(done)
